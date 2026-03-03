@@ -1,38 +1,25 @@
 version: '3.8'
 services:
-  postgres:
-    image: postgres:15-alpine
+  db:
+    image: postgres:15
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cardinality_i18n
+      POSTGRES_DB: cardinality
     ports:
       - "5432:5432"
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-
   backend:
-    build:
-      context: .
-      dockerfile: backend/Dockerfile
-    environment:
-      - DB_HOST=postgres
-      - REDIS_HOST=redis
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: cardinality
     depends_on:
-      - postgres
-      - redis
-
+      - db
   frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
+    build: ./frontend
     ports:
-      - "4200:80"
-    depends_on:
-      - backend
+      - "4200:4200"
