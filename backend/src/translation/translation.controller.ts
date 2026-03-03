@@ -1,16 +1,15 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
 import { TranslationService } from './translation.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
-@Controller('lookup/translations')
+@Controller('translations')
 export class TranslationController {
   constructor(private readonly translationService: TranslationService) {}
 
-  @Get(':locale/:module')
-  async getTranslations(
-    @Param('locale') locale: string,
-    @Param('module') module: string,
-  ) {
-    return this.translationService.getTranslations(locale, module);
+  @Post('translate')
+  @UseGuards(JwtAuthGuard)
+  async translate(@Body() body: { text: string; lang: string; type?: 'error' | 'field' }) {
+    const result = await this.translationService.translate(body.text, body.lang, body.type);
+    return { translatedText: result };
   }
 }
