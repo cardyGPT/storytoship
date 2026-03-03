@@ -1,7 +1,6 @@
 {
-  "name": "cardinality-i18n-automated",
+  "name": "cardinality-a11y-grid",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
     "start:backend": "cd backend && npm run start:dev",
     "start:frontend": "cd frontend && npm start",
