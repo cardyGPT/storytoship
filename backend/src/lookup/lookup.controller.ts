@@ -1,15 +1,13 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Headers } from '@nestjs/common';
 import { LookupService } from './lookup.service';
 
-@Controller('api/lookup')
+@Controller('lookup')
 export class LookupController {
   constructor(private readonly lookupService: LookupService) {}
 
-  @Get('translations')
-  async getTranslations(
-    @Query('module') module: string,
-    @Query('locale') locale: string
-  ) {
-    return this.lookupService.getTranslations(module, locale);
+  @Get('menu')
+  getLocalizedMenu(@Headers('accept-language') lang: string) {
+    const locale = lang?.split(',')[0] || 'en';
+    return this.lookupService.getMenu(locale);
   }
 }
