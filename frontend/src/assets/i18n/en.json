@@ -1,0 +1,8 @@
+{
+  "rbac": {
+    "permissions": {
+      "title": "Permissions Management",
+      "description": "Configure role access levels and security scopes."
+    }
+  }
+}
