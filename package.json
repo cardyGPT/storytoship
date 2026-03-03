@@ -1,0 +1,15 @@
+{
+  "name": "cardinality-pics-i18n",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start:backend": "cd backend && npm run start:dev",
+    "start:frontend": "cd frontend && npm run start",
+    "build": "npm run build --workspaces",
+    "docker:up": "docker-compose up --build"
+  }
+}
