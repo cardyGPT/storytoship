@@ -1,29 +1,27 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LookupController } from './lookup/lookup.controller';
-import { LookupService } from './lookup/lookup.service';
-import { Translation } from './lookup/translation.entity';
+import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { LookupModule } from './lookup/lookup.module';
+import { User } from './auth/entities/user.entity';
+import { MenuItem } from './lookup/entities/menu-item.entity';
+import { TranslationEntry } from './lookup/entities/translation-entry.entity';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: Number(process.env.DATABASE_PORT) || 5432,
-      username: process.env.DATABASE_USER || 'user',
-      password: process.env.DATABASE_PASSWORD || 'password',
-      database: process.env.DATABASE_NAME || 'cardinality_db',
-      entities: [Translation],
+      host: process.env.DB_HOST || 'localhost',
+      port: 5432,
+      username: process.env.DB_USERNAME || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_DATABASE || 'cardinality',
+      entities: [User, MenuItem, TranslationEntry],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Translation]),
+    AuthModule,
+    LookupModule,
   ],
-  controllers: [LookupController],
-  providers: [LookupService],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private lookupService: LookupService) {}
-  async onModuleInit() {
-    await this.lookupService.seed();
-  }
-}
+export class AppModule {}
