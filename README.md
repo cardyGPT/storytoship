@@ -1,15 +1,14 @@
-# Cardinality Automated i18N Engine
+# Cardinality A11y Grid
 
-This project implements PICS-1716, providing an AI-driven translation system that replaces static `.json` translation files.
+This project implements a WCAG 2.1 Level AA compliant DevExtreme Grid.
 
-## Features
-- **Dynamic Translation**: Real-time translation of UI labels and error messages.
-- **Tiered Strategy**: Uses OpenAI GPT-4o-mini for complex nuances and static APIs for labels.
-- **Dual-Layer Caching**: Redis (L1) and PostgreSQL (L2) to ensure sub-500ms latency.
-- **Angular Pipe**: `autoTranslate` pipe for seamless UI integration.
+## Compliance Features
+- **ARIA Roles**: Custom directive injects `grid`, `row`, and `gridcell`.
+- **Focus Management**: High-visibility focus indicators via CSS.
+- **Screen Reader Feedback**: Uses Angular CDK `LiveAnnouncer` for dynamic updates.
+- **Keyboard Navigation**: Native DevExtreme keyboard support enhanced with logical tab order.
 
-## Getting Started
-1. Copy `.env.example` to `.env` and add your `OPENAI_API_KEY`.
-2. Run `docker-compose up`.
-3. Access Frontend at `http://localhost:4200`.
-4. API Docs at `http://localhost:3000/api/docs`.
+## Commands
+- `docker-compose up`: Launch the full environment.
+- Backend: http://localhost:3000/api
+- Frontend: http://localhost:4200
