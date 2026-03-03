@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { I18nLookup } from './entities/i18n-lookup.entity';
 import { TranslationController } from './translation.controller';
 import { TranslationService } from './translation.service';
+import { Translation } from './entities/translation.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([I18nLookup])],
+  imports: [TypeOrmModule.forFeature([Translation])],
   controllers: [TranslationController],
   providers: [TranslationService],
   exports: [TranslationService],
