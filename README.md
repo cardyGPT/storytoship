@@ -1,13 +1,10 @@
-# Cardinality PICS - i18n RBAC Menu
+# Cardinality PICS - i18N Menu Translation
 
-Reference implementation for dynamic translation using NestJS + Angular Signals.
+## Setup
+1. Copy `backend/.env.example` to `backend/.env`
+2. Run `docker-compose up`
 
-## Getting Started
-1. `docker-compose up`
-2. Frontend: `http://localhost:4200`
-3. Backend API: `http://localhost:3000/api/lookup/translations?module=rbac&locale=es-ES`
-
-## Features
-- Tiered Fallback (DB -> Locale -> English)
-- No-refresh UI updates via Angular Signals & ngx-translate
-- TypeORM integration for translation lookup service.
+## Architecture
+- **Backend**: NestJS with TypeORM. Exposes `/api/v1/lookup/translations/:locale/:module`.
+- **Frontend**: Angular 17. Uses a custom `I18nPipe` and `TranslationService` with Signals for real-time UI updates.
+- **Database**: PostgreSQL storing `i18n_lookup` table.
