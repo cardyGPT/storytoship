@@ -1,0 +1,8 @@
+{
+  "rbac": {
+    "permissions": {
+      "title": "Gestión de Permisos",
+      "description": "Configurar niveles de acceso de roles y alcances de seguridad."
+    }
+  }
+}
