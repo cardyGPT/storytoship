@@ -1,42 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
-import { TranslationModule } from './translation/translation.module';
+import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { Translation } from './translation/entities/translation.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        type: 'postgres',
-        host: config.get<string>('DB_HOST', 'localhost'),
-        port: config.get<number>('DB_PORT', 5432),
-        username: config.get<string>('DB_USER', 'postgres'),
-        password: config.get<string>('DB_PASSWORD', 'postgres'),
-        database: config.get<string>('DB_NAME', 'cardinality_i18n'),
-        entities: [Translation],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
-    CacheModule.registerAsync({
-      isGlobal: true,
-      imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        store: redisStore,
-        host: config.get('REDIS_HOST', 'localhost'),
-        port: config.get('REDIS_PORT', 6379),
-        ttl: 86400, // 24 hours
-      }),
-      inject: [ConfigService],
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: 5432,
+      username: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
+      database: process.env.DB_NAME || 'cardinality',
+      autoLoadEntities: true,
+      synchronize: true,
     }),
     AuthModule,
-    TranslationModule,
+    UsersModule,
   ],
 })
 export class AppModule {}
