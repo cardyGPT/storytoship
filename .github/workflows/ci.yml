@@ -1,11 +1,18 @@
-name: CI
+name: CI/CD
 on: [push]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install deps
+      - name: Install dependencies
         run: npm install
       - name: Build
         run: npm run build
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to ECS
+        run: echo "Deploying to AWS ECS..."
