@@ -1,40 +1,63 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AutoTranslatePipe, TranslationService } from './shared/translation.service';
+import { DxDataGridModule, DxDataGridComponent } from 'devextreme-angular';
+import { GridA11yDirective } from './directives/grid-a11y.directive';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, AutoTranslatePipe],
+  imports: [CommonModule, DxDataGridModule, GridA11yDirective, HttpClientModule],
   template: `
-    <div class="p-8">
-      <h1 class="text-2xl font-bold mb-4">Cardinality i18N Engine</h1>
+    <div class="grid-container" role="main">
+      <h1>User Management - ADA Compliant Grid</h1>
       
-      <div class="mb-4">
-        <label>Select Language: </label>
-        <select (change)="changeLang($event)" class="border p-1">
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="zh">Chinese</option>
-        </select>
-      </div>
-
-      <div class="card bg-gray-100 p-4 rounded shadow">
-        <h2 class="font-semibold text-blue-600">{{ 'System Status' | autoTranslate }}</h2>
-        <p>{{ 'Welcome to the automated localization dashboard.' | autoTranslate }}</p>
+      <dx-data-grid 
+        [dataSource]="users"
+        [showBorders]="true"
+        [focusedRowEnabled]="true"
+        (onContentReady)="a11y.onContentReady = $event"
+        (onOptionChanged)="handleOptionChange($event)"
+        appGridA11y
+        #a11y="appGridA11y">
         
-        <div class="mt-4 p-2 bg-red-100 border-l-4 border-red-500 text-red-700">
-           <strong>Error:</strong> {{ 'The database connection timed out after 30 seconds.' | autoTranslate:'error' }}
-        </div>
-      </div>
-    </div>
-  `
-})
-export class AppComponent {
-  constructor(private translationService: TranslationService) {}
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
 
-  changeLang(event: any) {
-    this.translationService.setLanguage(event.target.value);
+        <dxi-column dataField="fullName" caption="Full Name" aria-sort="none"></dxi-column>
+        <dxi-column dataField="role" aria-sort="none"></dxi-column>
+        <dxi-column dataField="status" aria-sort="none"></dxi-column>
+      </dx-data-grid>
+    </div>
+  `,
+  styles: [`
+    .grid-container { padding: 20px; }
+    :host ::ng-deep .dx-datagrid-focus-overlay {
+      border: 3px solid #005a9c !important;
+    }
+    :host ::ng-deep [tabindex="0"]:focus {
+      outline: 3px solid #ffbf47 !important;
+      outline-offset: -3px;
+    }
+  `]
+})
+export class AppComponent implements OnInit {
+  users: any[] = [];
+  @ViewChild('a11y') a11yDirective!: GridA11yDirective;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.http.get<any[]>('http://localhost:3000/api/users').subscribe(data => {
+      this.users = data;
+    });
+  }
+
+  handleOptionChange(e: any) {
+    if (e.fullName === 'items') {
+      this.a11yDirective.announceStatus(`Grid updated, ${this.users.length} items loaded`);
+    }
   }
 }
