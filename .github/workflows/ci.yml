@@ -1,18 +1,16 @@
-name: CI/CD
+name: CI
 on: [push]
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Deploy to ECS
-        run: echo "Deploying to AWS ECS..."
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm install -g @nestjs/cli @angular/cli
+      - name: Build Backend
+        run: cd backend && npm install && npm run build
+      - name: Build Frontend
+        run: cd frontend && npm install && npm run build
