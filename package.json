@@ -1,9 +1,15 @@
 {
-  "name": "cardinality-a11y-grid",
+  "name": "elixir-labs-nested-tabs",
   "version": "1.0.0",
+  "description": "Nested Tab Navigation System",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "start:backend": "cd backend && npm run start:dev",
-    "start:frontend": "cd frontend && npm start",
+    "start:backend": "npm run start:dev --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
     "docker:up": "docker-compose up --build"
   }
 }
