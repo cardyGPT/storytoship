@@ -1,14 +1,12 @@
-# Cardinality A11y Grid
+# Elixir i18N Framework
 
-This project implements a WCAG 2.1 Level AA compliant DevExtreme Grid.
+## Setup
+1. Run `docker-compose up --build`
+2. Seed the database: `curl http://localhost:3000/api/translations/seed`
+3. Access Frontend: `http://localhost:4200`
 
-## Compliance Features
-- **ARIA Roles**: Custom directive injects `grid`, `row`, and `gridcell`.
-- **Focus Management**: High-visibility focus indicators via CSS.
-- **Screen Reader Feedback**: Uses Angular CDK `LiveAnnouncer` for dynamic updates.
-- **Keyboard Navigation**: Native DevExtreme keyboard support enhanced with logical tab order.
-
-## Commands
-- `docker-compose up`: Launch the full environment.
-- Backend: http://localhost:3000/api
-- Frontend: http://localhost:4200
+## Features
+- Real-time language hot-swapping using Angular Signals.
+- Backend localized string retrieval from PostgreSQL.
+- Fallback mechanism for missing keys.
+- RBAC Menu localization implementation.
