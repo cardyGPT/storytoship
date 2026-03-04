@@ -1,63 +1,40 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DxDataGridModule, DxDataGridComponent } from 'devextreme-angular';
-import { GridA11yDirective } from './directives/grid-a11y.directive';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, OnInit, effect } from '@angular/core';
+import { TranslationService } from './services/translation.service';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, DxDataGridModule, GridA11yDirective, HttpClientModule],
   template: `
-    <div class="grid-container" role="main">
-      <h1>User Management - ADA Compliant Grid</h1>
-      
-      <dx-data-grid 
-        [dataSource]="users"
-        [showBorders]="true"
-        [focusedRowEnabled]="true"
-        (onContentReady)="a11y.onContentReady = $event"
-        (onOptionChanged)="handleOptionChange($event)"
-        appGridA11y
-        #a11y="appGridA11y">
-        
-        <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxo-header-filter [visible]="true"></dxo-header-filter>
-        <dxo-paging [pageSize]="10"></dxo-paging>
-        <dxo-pager [showPageSizeSelector]="true" [showInfo]="true"></dxo-pager>
-
-        <dxi-column dataField="fullName" caption="Full Name" aria-sort="none"></dxi-column>
-        <dxi-column dataField="role" aria-sort="none"></dxi-column>
-        <dxi-column dataField="status" aria-sort="none"></dxi-column>
-      </dx-data-grid>
-    </div>
+    <nav class="sidebar">
+      <div class="lang-picker">
+        <button (click)="changeLang('en-US')">EN</button>
+        <button (click)="changeLang('es-ES')">ES</button>
+      </div>
+      <ul class="menu">
+        <li><i class="icon"></i> {{ ts.translate('permissions') }}</li>
+        <li><i class="icon"></i> {{ ts.translate('roles') }}</li>
+      </ul>
+    </nav>
+    <main>
+      <h1>RBAC Management</h1>
+      <p>Current Locale: {{ ts.currentLocale() }}</p>
+    </main>
   `,
   styles: [`
-    .grid-container { padding: 20px; }
-    :host ::ng-deep .dx-datagrid-focus-overlay {
-      border: 3px solid #005a9c !important;
-    }
-    :host ::ng-deep [tabindex="0"]:focus {
-      outline: 3px solid #ffbf47 !important;
-      outline-offset: -3px;
-    }
+    .sidebar { width: 250px; background: #f4f4f4; height: 100vh; padding: 20px; }
+    .menu { list-style: none; padding: 0; }
+    .menu li { padding: 10px; border-bottom: 1px solid #ddd; cursor: pointer; }
+    .lang-picker { margin-bottom: 20px; }
+    button { margin-right: 5px; cursor: pointer; }
   `]
 })
 export class AppComponent implements OnInit {
-  users: any[] = [];
-  @ViewChild('a11y') a11yDirective!: GridA11yDirective;
-
-  constructor(private http: HttpClient) {}
+  constructor(public ts: TranslationService) {}
 
   ngOnInit() {
-    this.http.get<any[]>('http://localhost:3000/api/users').subscribe(data => {
-      this.users = data;
-    });
+    this.ts.loadTranslations('rbac_menu').subscribe();
   }
 
-  handleOptionChange(e: any) {
-    if (e.fullName === 'items') {
-      this.a11yDirective.announceStatus(`Grid updated, ${this.users.length} items loaded`);
-    }
+  changeLang(lang: string) {
+    this.ts.setLocale(lang, 'rbac_menu');
   }
 }
