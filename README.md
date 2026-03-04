@@ -1,12 +1,17 @@
-# Elixir i18N Framework
+# RBAC i18N Implementation
 
 ## Setup
-1. Run `docker-compose up --build`
-2. Seed the database: `curl http://localhost:3000/api/translations/seed`
-3. Access Frontend: `http://localhost:4200`
+1. `docker-compose up --build`
+2. Backend will auto-generate tables.
+3. Use a SQL client to insert seed data:
+```sql
+INSERT INTO menus (id, key, "isActive") VALUES (gen_random_uuid(), 'PERMISSIONS_TAB', true);
+-- Insert translations for the created menu ID
+INSERT INTO menu_translations ("menuId", "langCode", label) VALUES ('<ID>', 'en', 'Permissions');
+INSERT INTO menu_translations ("menuId", "langCode", label) VALUES ('<ID>', 'es', 'Permisos');
+```
 
-## Features
-- Real-time language hot-swapping using Angular Signals.
-- Backend localized string retrieval from PostgreSQL.
-- Fallback mechanism for missing keys.
-- RBAC Menu localization implementation.
+## Architecture
+- **Backend:** NestJS + TypeORM. Localizes strings based on `Accept-Language` header.
+- **Frontend:** Angular 17+ Reactive Store. Subscribes to language changes via `BehaviorSubject`.
+- **Database:** Normalized Menu and MenuTranslation tables for multi-language support.
