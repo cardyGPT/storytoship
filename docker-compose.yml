@@ -1,11 +1,11 @@
 version: '3.8'
 services:
   db:
-    image: postgres:15
+    image: postgres:15-alpine
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: cardinality
+      POSTGRES_DB: elixir_db
     ports:
       - "5432:5432"
   backend:
@@ -14,12 +14,15 @@ services:
       - "3000:3000"
     environment:
       DB_HOST: db
+      DB_PORT: 5432
       DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_NAME: cardinality
+      DB_PASS: postgres
+      DB_NAME: elixir_db
     depends_on:
       - db
   frontend:
     build: ./frontend
     ports:
       - "4200:4200"
+    depends_on:
+      - backend
