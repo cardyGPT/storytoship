@@ -1,23 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DocumentsModule } from './documents/documents.module';
-import { AuthModule } from './auth/auth.module';
-import { Document } from './documents/entities/document.entity';
+import { TranslationModule } from './translation/translation.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
-      port: parseInt(process.env.DATABASE_PORT) || 5432,
-      username: process.env.DATABASE_USER || 'user',
-      password: process.env.DATABASE_PASSWORD || 'password',
-      database: process.env.DATABASE_NAME || 'docs_db',
-      entities: [Document],
-      synchronize: true, // Dev only
+      host: process.env.DB_HOST || 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'password',
+      database: 'formio_db',
+      autoLoadEntities: true,
+      synchronize: true,
     }),
-    AuthModule,
-    DocumentsModule,
+    TranslationModule,
   ],
 })
 export class AppModule {}
