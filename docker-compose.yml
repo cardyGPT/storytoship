@@ -1,32 +1,22 @@
 version: '3.8'
-
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:15
     environment:
-      POSTGRES_USER: user
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: docs_db
+      POSTGRES_DB: formio_db
     ports:
       - "5432:5432"
-
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     environment:
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
-      DATABASE_NAME: docs_db
-      JWT_SECRET: super-secret-key
+      DB_HOST: db
     depends_on:
       - db
-
   frontend:
     build: ./frontend
     ports:
       - "4200:4200"
-    depends_on:
-      - backend
