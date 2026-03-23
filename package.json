@@ -1,15 +1,13 @@
 {
-  "name": "elixir-labs-nested-tabs",
+  "name": "in-app-documentation-poc",
   "version": "1.0.0",
-  "description": "Nested Tab Navigation System",
   "private": true,
   "workspaces": [
     "backend",
     "frontend"
   ],
   "scripts": {
-    "start:backend": "npm run start:dev --workspace=backend",
-    "start:frontend": "npm run start --workspace=frontend",
-    "docker:up": "docker-compose up --build"
+    "start": "docker-compose up",
+    "build": "npm run build --workspaces"
   }
 }
