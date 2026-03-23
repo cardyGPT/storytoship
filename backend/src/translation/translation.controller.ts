@@ -1,15 +1,26 @@
-import { Controller, Post, Body, Get, Query, UseGuards } from '@nestjs/common';
-import { TranslationService } from './translation.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Controller, Get, Param } from '@nestjs/common';
 
 @Controller('translations')
 export class TranslationController {
-  constructor(private readonly translationService: TranslationService) {}
+  private translations = {
+    en: {
+      submit: 'Submit',
+      firstName: 'First Name',
+      lastName: 'Last Name',
+      required: '{{field}} is required',
+      emailInvalid: 'Email must be a valid email.'
+    },
+    de: {
+      submit: 'Absenden',
+      firstName: 'Vorname',
+      lastName: 'Nachname',
+      required: '{{field}} ist erforderlich',
+      emailInvalid: 'E-Mail muss eine gültige E-Mail-Adresse sein.'
+    }
+  };
 
-  @Post('translate')
-  @UseGuards(JwtAuthGuard)
-  async translate(@Body() body: { text: string; lang: string; type?: 'error' | 'field' }) {
-    const result = await this.translationService.translate(body.text, body.lang, body.type);
-    return { translatedText: result };
+  @Get(':lang')
+  getTranslation(@Param('lang') lang: string) {
+    return this.translations[lang] || this.translations['en'];
   }
 }
