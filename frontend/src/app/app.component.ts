@@ -1,21 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import { NavService } from './services/nav.service';
+import { ActivatedRoute } from '@angular/router';
+import { HelpService } from './services/help.service';
 
 @Component({
   selector: 'app-root',
   template: `
-    <header>
-      <h1>Elixir Labs Platform</h1>
-    </header>
+    <nav>
+      <h1>Cardinality Docs POC</h1>
+      <button (click)="toggleHelp()">Need Help?</button>
+    </nav>
     <main>
-      <app-nested-tabs [tabs]="navConfig" [level]="0"></app-nested-tabs>
+      <router-outlet></router-outlet>
+      <button (click)="openContextualHelp('ops-guide')">Context Help: Operations</button>
     </main>
+    <app-knowledge-sidebar></app-knowledge-sidebar>
   `
 })
 export class AppComponent implements OnInit {
-  navConfig = [];
-  constructor(private navService: NavService) {}
+  constructor(private route: ActivatedRoute, private helpService: HelpService) {}
+
   ngOnInit() {
-    this.navService.getConfig().subscribe(config => this.navConfig = config);
+    this.route.queryParams.subscribe(params => {
+      if (params['docId']) {
+        this.helpService.openHelp(params['docId']);
+      }
+    });
   }
+
+  toggleHelp() { this.helpService.openHelp(); }
+  openContextualHelp(slug: string) { this.helpService.openHelp(slug); }
 }
