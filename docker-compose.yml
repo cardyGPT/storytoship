@@ -1,21 +1,32 @@
+version: '3.8'
+
 services:
-  postgres:
+  db:
     image: postgres:15-alpine
     environment:
-      POSTGRES_DB: pics_db
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: docs_db
     ports:
       - "5432:5432"
+
   backend:
-    build: 
-      context: ./backend
-    env_file: .env
+    build: ./backend
     ports:
       - "3000:3000"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: docs_db
+      JWT_SECRET: super-secret-key
     depends_on:
-      - postgres
+      - db
+
   frontend:
-    build:
-      context: ./frontend
+    build: ./frontend
     ports:
       - "4200:4200"
+    depends_on:
+      - backend
