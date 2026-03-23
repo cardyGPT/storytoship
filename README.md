@@ -1,16 +1,16 @@
-# In-App Documentation POC (PICS-482)
+# Localized Formio Application
 
-## Setup
+This project implements a multi-language Formio solution using NestJS and Angular.
+
+## Prerequisites
+- Docker & Docker Compose
+
+## Running the app
 1. `docker-compose up --build`
-2. Backend API: http://localhost:3000/api
-3. Frontend: http://localhost:4200
+2. Frontend: http://localhost:4200
+3. API: http://localhost:3000
 
-## Deep Linking
-Access direct documentation via:
-`http://localhost:4200/?docId=ops-guide`
-
-## Architecture
-- **Backend**: NestJS with TypeORM & PostgreSQL.
-- **Frontend**: Angular 17 with a Sidecar UI Pattern.
-- **State**: Reactive BehaviorSubjects in `HelpService` for global state management.
-- **Content**: Markdown-ready document entities.
+## How it works
+- **Backend**: Serves JSON translation files via dynamic endpoints.
+- **Frontend**: Uses `i18next` to fetch translations and merges them with Formio's renderer via the `i18n` option.
+- **Localization Service**: Manages language state and reactive UI updates.
