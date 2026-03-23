@@ -1,13 +1,16 @@
-# Nested Tab Navigation System (PICS-617)
+# In-App Documentation POC (PICS-482)
 
 ## Setup
-1. Copy `backend/.env.example` to `backend/.env`
-2. Run `docker-compose up --build`
-3. Seed the database with `POST http://localhost:3000/api/navigation/seed`
-4. Access app at `http://localhost:4200`
+1. `docker-compose up --build`
+2. Backend API: http://localhost:3000/api
+3. Frontend: http://localhost:4200
 
-## Features
-- Recursive tab component structure
-- URL-driven navigation state
-- TypeORM backend hierarchy
-- JWT protected configuration API
+## Deep Linking
+Access direct documentation via:
+`http://localhost:4200/?docId=ops-guide`
+
+## Architecture
+- **Backend**: NestJS with TypeORM & PostgreSQL.
+- **Frontend**: Angular 17 with a Sidecar UI Pattern.
+- **State**: Reactive BehaviorSubjects in `HelpService` for global state management.
+- **Content**: Markdown-ready document entities.
